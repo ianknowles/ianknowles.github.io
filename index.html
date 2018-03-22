@@ -47,7 +47,7 @@
     var dataset = {};
 
     d3.queue()
-        .defer(d3.csv, "output.csv", function(d) {
+        .defer(d3.csv, "https://ianknowles.github.io/output.csv", function(d) {
             var value = d.Jun_Internet_online_model * 100
             dataset[d.Country] = { numberOfThings: value, fillColor: 0 };
             })
