@@ -38,9 +38,13 @@ function ready(error, us) {
         dataset[key]['fillColor'] = paletteScale(dataset[key]['numberOfThings'])
     }
 
-    // render map
+    createdatamap('container1', dataset, 'Jun_Internet_online_model')
+    createdatamap('container2', dataset, 'Jun_Internet_online_model')
+}
+
+function createdatamap(id, dataset, hovertext) {
     new Datamap({
-        element: document.getElementById('container1'),
+        element: document.getElementById(id),
         projection: 'mercator', // big world map
         // countries don't listed in dataset will be painted with this color
         fills: {defaultFill: '#F5F5F5'},
@@ -63,7 +67,7 @@ function ready(error, us) {
                 // tooltip content
                 return ['<div class="hoverinfo">',
                     '<strong>', geo.properties.name, '</strong>',
-                    '<br>Jun_Internet_online_model: <strong>', data.numberOfThings / 100, '</strong>',
+                    '<br>', hovertext, ': <strong>', data.numberOfThings / 100, '</strong>',
                     '</div>'].join('');
             }
         }
