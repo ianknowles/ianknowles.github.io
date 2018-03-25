@@ -32,12 +32,12 @@ function ready(error, us) {
         selCol2.options.add(new Option(headers[x], headers[x]));
     }
     selCol1.value = headers[1];
-    selCol2.value = headers[1];
+    selCol2.value = headers[2];
 
-    map1 = createdatamap('container1', dataset[0], headers[1]);
-    map2 = createdatamap('container2', dataset[1], headers[1]);
-    updateMap(map1, 'container1', dataset[0], headers[1]);
-    updateMap(map2, 'container2', dataset[1], headers[1]);
+    map1 = createdatamap('container1', dataset[0], selCol1.value);
+    map2 = createdatamap('container2', dataset[1], selCol2.value);
+    updateMap(map1, 'container1', dataset[0], selCol1.value);
+    updateMap(map2, 'container2', dataset[1], selCol2.value);
 }
 
 function changeColumn1() {
