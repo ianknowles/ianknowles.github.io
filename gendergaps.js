@@ -21,7 +21,7 @@ function ready(error, us) {
     var headers = [];
     //dataset.forEach(function(obj){ onlyValues.append(obj['numberOfThings']); });
     for (var key in csvdata['USA']) {
-        if ((key !== "") && (key !== 'Country') && (key !== 'Numeric Country')) {
+        if ((key !== "id") && (key !== 'Country') && (key !== 'Numeric Country')) {
             headers.push(key);
         }
     }
