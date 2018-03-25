@@ -2,11 +2,11 @@
 // { "USA": { "fillColor": "#42a844", numberOfWhatever: 75},
 //   "FRA": { "fillColor": "#8dc386", numberOfWhatever: 43 } }
 var dataset = {};
+var csvdata = {};
 
 d3.queue()
     .defer(d3.csv, "output.csv", function (d) {
-        var value = d.Jun_Internet_online_model * 100
-        dataset[d.Country] = {numberOfThings: value, fillColor: 0};
+        csvdata[d.Country] = d;
     })
     .await(ready);
 
@@ -17,11 +17,13 @@ function ready(error, us) {
     // For this purpose we create palette(using min/max series-value)
     var onlyValues = []
     //dataset.forEach(function(obj){ onlyValues.append(obj['numberOfThings']); });
-    for (var key in dataset) {
-        var item = dataset[key];
+    for (var key in csvdata) {
+        var item = {};
+        item['numberOfThings'] = csvdata[key].Jun_Internet_online_model * 100;
         if (!isNaN(item['numberOfThings'])) {
             onlyValues.push(item['numberOfThings']);
         }
+        dataset[key] = item;
     }
     var minValue = Math.min.apply(null, onlyValues),
         maxValue = Math.max.apply(null, onlyValues);
@@ -67,7 +69,7 @@ function createdatamap(id, dataset, hovertext) {
                 // tooltip content
                 return ['<div class="hoverinfo">',
                     '<strong>', geo.properties.name, '</strong>',
-                    '<br>', hovertext, ': <strong>', data.numberOfThings / 100, '</strong>',
+                    '<br>', hovertext, ': <strong>', (data.numberOfThings / 100).toFixed(3), '</strong>',
                     '</div>'].join('');
             }
         }
