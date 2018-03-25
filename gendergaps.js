@@ -1,8 +1,10 @@
 // Datamaps expect data in format:
 // { "USA": { "fillColor": "#42a844", numberOfWhatever: 75},
 //   "FRA": { "fillColor": "#8dc386", numberOfWhatever: 43 } }
-var dataset = {};
+var dataset = [{}, {}];
 var csvdata = {};
+var map1;
+var map2;
 
 d3.queue()
     .defer(d3.csv, "output.csv", function (d) {
@@ -15,11 +17,46 @@ function ready(error, us) {
     // We need to colorize every country based on "numberOfWhatever"
     // colors should be uniq for every value.
     // For this purpose we create palette(using min/max series-value)
-    var onlyValues = []
+    //can we get the headers from the csv read func?
+    var headers = [];
     //dataset.forEach(function(obj){ onlyValues.append(obj['numberOfThings']); });
+    for (var key in csvdata['USA']) {
+        if ((key !== "") && (key !== 'Country') && (key !== 'Numeric Country')) {
+            headers.push(key);
+        }
+    }
+    var selCol1 = document.getElementById('selCol1');
+    var selCol2 = document.getElementById('selCol2');
+    for (var x in headers) {
+        selCol1.options.add(new Option(headers[x], headers[x]));
+        selCol2.options.add(new Option(headers[x], headers[x]));
+    }
+    selCol1.value = headers[1];
+    selCol2.value = headers[1];
+
+    map1 = createdatamap('container1', dataset[0], headers[1]);
+    map2 = createdatamap('container2', dataset[1], headers[1]);
+    updateMap(map1, 'container1', dataset[0], headers[1]);
+    updateMap(map2, 'container2', dataset[1], headers[1]);
+}
+
+function changeColumn1() {
+    var selCol = document.getElementById("selCol1");
+    var column = selCol.value;
+    updateMap(map1, 'container1', dataset[0], column);
+}
+
+function changeColumn2() {
+    var selCol = document.getElementById("selCol2");
+    var column = selCol.value;
+    updateMap(map2, 'container2', dataset[1], column);
+}
+
+function updateMap(map, id, dataset, column) {
+    var onlyValues = [];
     for (var key in csvdata) {
         var item = {};
-        item['numberOfThings'] = csvdata[key].Jun_Internet_online_model * 100;
+        item['numberOfThings'] = csvdata[key][column] * 100;
         if (!isNaN(item['numberOfThings'])) {
             onlyValues.push(item['numberOfThings']);
         }
@@ -37,20 +74,25 @@ function ready(error, us) {
 
     // fill dataset in appropriate format
     for (var key in dataset) {
-        dataset[key]['fillColor'] = paletteScale(dataset[key]['numberOfThings'])
+        if (isNaN(dataset[key]['numberOfThings']) || (dataset[key]['numberOfThings'] === 0)) {
+            //get defaultFill from map
+            dataset[key]['fillColor'] = '#F5F5F5';
+        }
+        else {
+            dataset[key]['fillColor'] = paletteScale(dataset[key]['numberOfThings']);
+        }
     }
 
-    createdatamap('container1', dataset, 'Jun_Internet_online_model')
-    createdatamap('container2', dataset, 'Jun_Internet_online_model')
+    map.updateChoropleth(dataset);
 }
 
 function createdatamap(id, dataset, hovertext) {
-    new Datamap({
+    return new Datamap({
         element: document.getElementById(id),
         projection: 'mercator', // big world map
         // countries don't listed in dataset will be painted with this color
         fills: {defaultFill: '#F5F5F5'},
-        data: dataset,
+        data: {},
         geographyConfig: {
             borderColor: '#DEDEDE',
             highlightBorderWidth: 2,
