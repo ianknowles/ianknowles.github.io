@@ -34,8 +34,8 @@ function ready(error, us) {
     selCol1.value = headers[1];
     selCol2.value = headers[2];
 
-    map1 = createdatamap('container1', dataset[0], selCol1.value);
-    map2 = createdatamap('container2', dataset[1], selCol2.value);
+    map1 = createdatamap('container1');
+    map2 = createdatamap('container2');
     updateMap(map1, 'container1', dataset[0], selCol1.value);
     updateMap(map2, 'container2', dataset[1], selCol2.value);
 }
@@ -86,7 +86,7 @@ function updateMap(map, id, dataset, column) {
     map.updateChoropleth(dataset);
 }
 
-function createdatamap(id, dataset, hovertext) {
+function createdatamap(id) {
     return new Datamap({
         element: document.getElementById(id),
         projection: 'mercator', // big world map
@@ -111,7 +111,7 @@ function createdatamap(id, dataset, hovertext) {
                 // tooltip content
                 return ['<div class="hoverinfo">',
                     '<strong>', geo.properties.name, '</strong>',
-                    '<br>', hovertext, ': <strong>', (data.numberOfThings / 100).toFixed(3), '</strong>',
+                    '<br>', '<strong>', (data.numberOfThings / 100).toFixed(3), '</strong>',
                     '</div>'].join('');
             }
         }
