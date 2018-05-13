@@ -7,8 +7,8 @@ var map1;
 var map2;
 
 d3.queue()
-    .defer(d3.csv, "output.csv", function (d) {
-        csvdata[d.Country] = d;
+    .defer(d3.csv, "https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/data/2018-05-13/monthly_model.csv", function (d) {
+        csvdata[d.ISO3Code] = d;
     })
     .await(ready);
 
@@ -21,7 +21,7 @@ function ready(error, us) {
     var headers = [];
     //dataset.forEach(function(obj){ onlyValues.append(obj['numberOfThings']); });
     for (var key in csvdata['USA']) {
-        if ((key !== "id") && (key !== 'Country') && (key !== 'Numeric Country')) {
+        if ((key !== "") && (key !== 'Country') && (key !== 'ISO3Code')) {
             headers.push(key);
         }
     }
