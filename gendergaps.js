@@ -7,7 +7,7 @@ var map1;
 var map2;
 
 d3.queue()
-    .defer(d3.csv, "https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/data/2018-05-13/monthly_model.csv", function (d) {
+    .defer(d3.csv, "https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/data/2018-05-14/monthly_model.csv", function (d) {
         csvdata[d.ISO3Code] = d;
     })
     .await(ready);
