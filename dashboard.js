@@ -5,13 +5,22 @@ var dataset = [{}, {}];
 var csvdata = {};
 var csvdatalist = [];
 var map;
+var csv_url = "";
+var base_url = "https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/";
 
-d3.queue()
-    .defer(d3.csv, "https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/data/2018-05-14/monthly_model.csv", function (d) {
-        csvdata[d.ISO3Code] = d;
-        csvdatalist.push(d);
-    })
-    .await(ready);
+d3.json("https://s3.eu-west-3.amazonaws.com/www.digitalgendergaps.org/data/models.json", function(model_index){
+    csv_url = base_url + model_index['latest'];
+    fetch_csv();
+})
+
+function fetch_csv() {
+    d3.queue()
+        .defer(d3.csv, csv_url, function (d) {
+            csvdata[d.ISO3Code] = d;
+            csvdatalist.push(d);
+        })
+        .await(ready);
+}
 
 var tabulate = function (dict) {
     columns = []
